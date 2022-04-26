@@ -252,6 +252,10 @@ setInterval(function () {
         ballLeft -= moveLeft;
         ball.style.left = ballLeft + "px";
       } else {
+        leftScore = 0;
+        rightScore = 0;
+        scoreBoard.innerHTML = "Score " + leftScore + " : " + rightScore + "";
+        leftAuto = false;
         left = true;
       }
     }
@@ -318,6 +322,10 @@ setInterval(function () {
         ballLeft += moveLeft;
         ball.style.left = ballLeft + "px";
       } else {
+        leftScore = 0;
+        rightScore = 0;
+        scoreBoard.innerHTML = "Score " + leftScore + " : " + rightScore + "";
+        rightAuto = false;
         left = false;
       }
     } else if (!left) {
