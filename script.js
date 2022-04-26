@@ -18,6 +18,8 @@ var rightScore = 0;
 var scoreBoard;
 var moveBoards;
 var auto = false
+var leftAuto;
+var rightAuto;
 window.onload = function () {
   leftBoard = document.getElementById("left");
   rightBoard = document.getElementById("right");
@@ -194,6 +196,160 @@ setInterval(function () {
       }
     }
   }
+  if (leftAuto){
+    rightBoardX = window.innerWidth - 32;
+    leftBoardX = leftBoard.offsetLeft + 8;
+    checkRightXAxis =
+      rightBoardX <= ballLeft + ball.clientWidth &&
+      ballLeft + ball.clientWidth <= rightBoardX + rightBoard.clientWidth;
+    checkRightYAxis =
+      rightTop <= ballTop && ballTop <= rightTop + rightBoard.clientHeight;
+    checkLeftXAxis =
+      leftBoardX + leftBoard.clientWidth >= ballLeft + 16 &&
+      ballLeft + 16 >= leftBoardX;
+    checkLeftYAxis =
+      leftTop <= ballTop && ballTop <= leftTop + leftBoard.clientHeight;
+    if (checkRightXAxis && checkRightYAxis) {
+      left = !left;
+      rightScore += 1;
+      scoreBoard.innerHTML = "Score " + leftScore + " : " + rightScore + "";
+    }
+    if (checkLeftXAxis && checkLeftYAxis) {
+      left = !left;
+      leftScore += 1;
+      scoreBoard.innerHTML = "Score " + leftScore + " : " + rightScore + "";
+    }
+    if (left) {
+      if (ballLeft <= rightMost) {
+        ballLeft += moveLeft;
+        ball.style.left = ballLeft + "px";
+      } else {
+        leftScore = 0;
+        rightScore = 0;
+        scoreBoard.innerHTML = "Score " + leftScore + " : " + rightScore + "";
+        leftAuto = false;
+        left = false;
+      }
+    } else if (!left) {
+      if (ballLeft >= leftMost) {
+        if (!topp && moveBoards < window.innerWidth/2){
+          if (window.innerHeight - moveBoards > leftTop + 32){
+            leftTop += 5
+            leftBoard.style.top = leftTop + "px";
+          }else if(window.innerHeight - moveBoards < leftTop + 32){
+            leftTop -= 5
+            leftBoard.style.top = leftTop + "px";
+          }
+        }else if (topp && moveBoards < window.innerWidth/2){
+          if (moveBoards - 8 > leftTop + 32){
+            leftTop += 5
+            leftBoard.style.top = leftTop + "px";
+          }else if(moveBoards - 8 < leftTop + 32){
+            leftTop -= 5
+            leftBoard.style.top = leftTop + "px";
+          }
+        }
+        ballLeft -= moveLeft;
+        ball.style.left = ballLeft + "px";
+      } else {
+        left = true;
+      }
+    }
+    if (topp) {
+      if (ballTop <= lowest) {
+        ballTop += moveUp;
+        ball.style.top = ballTop + "px";
+      } else {
+        moveBoards = ballLeft;
+        topp = false;
+      }
+    } else if (!topp) {
+      if (ballTop >= highest) {
+        ballTop -= moveUp;
+        ball.style.top = ballTop + "px";
+      } else {
+        moveBoards = ballLeft;
+        topp = true;
+      }
+    }
+  }
+  if (rightAuto){
+    rightBoardX = window.innerWidth - 32;
+    leftBoardX = leftBoard.offsetLeft + 8;
+    checkRightXAxis =
+      rightBoardX <= ballLeft + ball.clientWidth &&
+      ballLeft + ball.clientWidth <= rightBoardX + rightBoard.clientWidth;
+    checkRightYAxis =
+      rightTop <= ballTop && ballTop <= rightTop + rightBoard.clientHeight;
+    checkLeftXAxis =
+      leftBoardX + leftBoard.clientWidth >= ballLeft + 16 &&
+      ballLeft + 16 >= leftBoardX;
+    checkLeftYAxis =
+      leftTop <= ballTop && ballTop <= leftTop + leftBoard.clientHeight;
+    if (checkRightXAxis && checkRightYAxis) {
+      left = !left;
+      rightScore += 1;
+      scoreBoard.innerHTML = "Score " + leftScore + " : " + rightScore + "";
+    }
+    if (checkLeftXAxis && checkLeftYAxis) {
+      left = !left;
+      leftScore += 1;
+      scoreBoard.innerHTML = "Score " + leftScore + " : " + rightScore + "";
+    }
+    if (left) {
+      if (ballLeft <= rightMost) {
+        if (!topp && moveBoards > window.innerWidth/2){
+          if (window.innerHeight - (window.innerWidth - moveBoards) > rightTop + 32){
+            rightTop += 5
+            rightBoard.style.top = rightTop + "px";
+          }else if(window.innerHeight - (window.innerWidth - moveBoards) < rightTop + 32){
+            rightTop -= 5
+            rightBoard.style.top = rightTop + "px";
+          }
+        }else if (topp && moveBoards > window.innerWidth/2){
+          if (window.innerWidth - moveBoards > rightTop + 87){
+            rightTop += 5
+            rightBoard.style.top = rightTop + "px";
+          }else if(window.innerWidth - moveBoards < rightTop + 87){
+            rightTop -= 5
+            rightBoard.style.top = rightTop + "px";
+          }
+        }
+        ballLeft += moveLeft;
+        ball.style.left = ballLeft + "px";
+      } else {
+        left = false;
+      }
+    } else if (!left) {
+      if (ballLeft >= leftMost) {
+        ballLeft -= moveLeft;
+        ball.style.left = ballLeft + "px";
+      } else {
+        leftScore = 0;
+        rightScore = 0;
+        scoreBoard.innerHTML = "Score " + leftScore + " : " + rightScore + "";
+        rightAuto = false;
+        left = true;
+      }
+    }
+    if (topp) {
+      if (ballTop <= lowest) {
+        ballTop += moveUp;
+        ball.style.top = ballTop + "px";
+      } else {
+        moveBoards = ballLeft;
+        topp = false;
+      }
+    } else if (!topp) {
+      if (ballTop >= highest) {
+        ballTop -= moveUp;
+        ball.style.top = ballTop + "px";
+      } else {
+        moveBoards = ballLeft;
+        topp = true;
+      }
+    }
+  }
 }, 4);
 window.addEventListener("keydown", function movement(obj) {
   keys = keys || [];
@@ -203,27 +359,41 @@ window.addEventListener("keydown", function movement(obj) {
     rightTop < window.innerHeight - rightBoard.clientHeight * 1.5 &&
     !auto
   ) {
-    rightTop += 10;
+    rightTop += 32;
     rightBoard.style.top = rightTop + "px";
   }
   if (keys["ArrowUp"] && rightTop > 0 - rightBoard.clientHeight / 2 && !auto) {
-    rightTop -= 10;
+    rightTop -= 32;
     rightBoard.style.top = rightTop + "px";
   }
   if (keys["w"] && leftTop > 0 - leftBoard.clientHeight / 2 && !auto) {
-    leftTop -= 10;
+    leftTop -= 32;
     leftBoard.style.top = leftTop + "px";
   }
+  if (keys["l"]) {
+    leftAuto = true;
+    start = false
+  }
+  if (keys["r"]) {
+    rightAuto = true;
+    start = false
+  }
   if (keys["p"]) {
-    auto = true;
-    start = false;
+    auto = true
+    start = false
+  }
+  if (rightAuto && leftAuto){
+    auto = true
+    rightAuto = false
+    leftAuto = false
+    start = false
   }
   if (
     keys["s"] &&
     leftTop < window.innerHeight - leftBoard.clientHeight * 1.5 &&
     !auto
   ) {
-    leftTop += 10;
+    leftTop += 32;
     leftBoard.style.top = leftTop + "px";
   }
   if (keys[" "] && !start) {
@@ -238,7 +408,7 @@ window.addEventListener("keydown", function movement(obj) {
     leftTop = window.innerHeight / 2 - leftBoard.clientHeight / 2;
     rightTop = window.innerHeight / 2 - rightBoard.clientHeight / 2;
     start = true;
-    auto = false;
+    auto = false
   }
 });
 document.addEventListener(
