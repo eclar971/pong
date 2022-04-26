@@ -1,0 +1,32 @@
+html{
+    color-scheme: dark;
+    font-family: 'VT323', monospace;
+    overflow: hidden;
+}
+.scoreBoard{
+    display: block;
+    font-size: medium;
+    text-align: center;
+}
+.board{
+    height: 64px;
+    width: 2px;
+    background-color: white;
+}
+#left{
+    float: left;
+    position: relative;
+    top: 45%;
+}
+#right{
+    position: relative;
+    top: 45%;
+}
+.ball{
+    width: 5px;
+    height: 5px;
+    background-color: white;
+    position: relative;
+    top: 49%;
+    left: 49%;
+}
